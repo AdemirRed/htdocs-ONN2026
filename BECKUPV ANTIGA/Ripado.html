@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo de Ripas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .radio-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        input[readonly] {
+            background-color: #f4f4f9;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cálculo de Ripas</h1>
+        <form id="calcForm">
+            <label for="quantity">Quantidade de Ripas</label>
+            <input type="number" id="quantity" placeholder="Quantidade de Ripas" required>
+            <label for="height">Altura (mm)</label>
+            <input type="number" id="height" placeholder="Altura (mm)" required>
+            <label for="width">Largura (mm)</label>
+            <input type="number" id="width" placeholder="Largura (mm)" required>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="calculationType" value="width" checked> Calcular pela Largura
+                </label>
+                <label>
+                    <input type="radio" name="calculationType" value="height"> Calcular pela Altura
+                </label>
+            </div>
+            <label for="split">Dividir em quantas peças? (opcional)</label>
+            <input type="number" id="split" placeholder="Dividir em quantas peças?">
+            <button type="button" onclick="calculate()">Calcular</button>
+	   <a href="http://192.168.0.201/materiais.php">
+                <button type="button">Voltar</button>
+            </a>
+        </form>
+
+        <div class="result">
+            <label for="totalSize">Tamanho total necessário:</label>
+            <input type="text" id="totalSize" readonly>
+            <label for="pieceSize">Tamanho por peça:</label>
+            <input type="text" id="pieceSize" readonly>
+            <label for="finalPieces">Quantidade de peças:</label>
+            <input type="text" id="finalPieces" readonly>
+        </div>
+    </div>
+
+    <script>
+function tamanho(){
+altura = "2740"
+document.getAnimations('height')
+}
+        function formatMeasurement(value) {
+            if (value >= 1000) {
+                return value.toFixed(1).replace(".", ",");
+            } else {
+                return Math.round(value).toString().replace(".", ",");
+            }
+        }
+
+        function calculate() {
+            const quantity = parseInt(document.getElementById('quantity').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const width = parseFloat(document.getElementById('width').value);
+            const split = parseInt(document.getElementById('split').value) || 1;
+            const calculationType = document.querySelector('input[name="calculationType"]:checked').value;
+            const cutThickness = 4.2; // Espessura do corte
+
+            if (!quantity || !height || !width) {
+                alert("Por favor, preencha todos os campos obrigatórios.");
+                return;
+            }
+
+            let totalSize;
+            let pieceSize;
+            let pieceHeight;
+            let pieceWidth;
+
+            if (calculationType === "width") {
+                totalSize = (width + cutThickness) * quantity;
+                pieceSize = totalSize / split;
+                pieceHeight = height;
+                pieceWidth = pieceSize;
+            } else {
+                totalSize = (height + cutThickness) * quantity;
+                pieceSize = totalSize / split;
+                pieceHeight = pieceSize;
+                pieceWidth = width;
+            }
+
+            // Exibindo os valores nos campos de texto
+            document.getElementById('totalSize').value = formatMeasurement(totalSize) + " mm";
+            document.getElementById('pieceSize').value = formatMeasurement(pieceSize) + " mm";
+            document.getElementById('finalPieces').value = split + " peças";
+        }
+    </script>
+</body>
+</html>

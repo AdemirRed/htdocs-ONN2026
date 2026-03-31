@@ -1,0 +1,7 @@
+Informações do Vídeo:
+Timestamp: 20251028_164255
+Duração: 15s
+Resolução: 960x1280
+Tamanho: 310453 bytes
+URL: https://mmg.whatsapp.net/v/t62.7161-24/540463156_1885801572358942_9217955774928322451_n.enc?ccb=11-4&oh=01_Q5Aa2wE4K0-YKVAUyIOt9vM17W11hjVMaWDjq7bsFp-TFMwoCg&oe=6928A51D&_nc_sid=5e03e0&mms3=true
+Tipo MIME: video/mp4

@@ -1,0 +1,38 @@
+/* ÁREA DE SCAN HORIZONTAL PARA CÓDIGOS DE BARRAS */
+.scanner-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;           /* LARGURA MENOR - linha vertical fina */
+    height: 85%;           /* ALTURA MAIOR - cobre mais da tela */
+    border: 3px solid #ff0000;
+    border-radius: 8px;
+    pointer-events: none;
+    z-index: 100;
+    background: rgba(255, 0, 0, 0.1);
+}
+
+.scanner-overlay::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 3px;            /* LINHA VERTICAL FINA */
+    background: linear-gradient(180deg, transparent, #ff0000 20%, #ff0000 80%, transparent);
+    transform: translateX(-50%);
+    animation: scanHorizontal 2s ease-in-out infinite;  /* NOVA ANIMAÇÃO */
+    box-shadow: 0 0 15px #ff0000;
+}
+
+@keyframes scanHorizontal {
+    0%, 100% {
+        left: 10%;         /* MOVE DA ESQUERDA */
+        opacity: 1;
+    }
+    50% {
+        left: 90%;         /* PARA A DIREITA */
+        opacity: 0.7;
+    }
+}

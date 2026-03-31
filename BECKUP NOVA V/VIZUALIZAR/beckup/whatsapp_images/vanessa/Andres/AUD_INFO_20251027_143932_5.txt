@@ -1,0 +1,7 @@
+Informações do Áudio:
+Timestamp: 20251027_143932
+Tipo: Áudio
+Duração: N/As
+Tamanho: N/A bytes
+URL: N/A
+Tipo MIME: audio/ogg; codecs=opus

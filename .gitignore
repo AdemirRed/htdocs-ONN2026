@@ -1,0 +1,25 @@
+# Arquivos grandes demais para GitHub (excedem 100MB)
+BECKUP NOVA V/debug.log
+BECKUP NOVA V/VIZUALIZAR.rar
+BECKUP NOVA V/chat_data.json
+BECKUP NOVA V/VIZUALIZAR/beckup/chat_history_complete.json
+BECKUP NOVA V/VIZUALIZAR/beckup/chat_data.json
+VIZUALIZAR.rar
+VIZUALIZAR/beckup/chat_data.json
+VIZUALIZAR/beckup/chat_history_complete.json
+chat_data.json
+
+# Logs grandes
+*.log
+debug.log
+
+# Arquivos compactados de backup
+*.rar
+*.zip
+*.tar.gz
+
+# Cache e temporários
+__pycache__/
+*.pyc
+Thumbs.db
+.DS_Store

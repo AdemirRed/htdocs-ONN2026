@@ -1,0 +1,139 @@
+{
+  "ademir": {
+    "messages": [
+      {
+        "id": "false_555197756708@c.us_3EB0AD7CB4D68F08B2A491",
+        "timestamp": "2025-10-27 10:07:35",
+        "from": "555197756708@c.us",
+        "to": "555198804804@c.us",
+        "body": "",
+        "type": "image",
+        "hasMedia": true,
+        "data_recebimento": "2025-10-27 14:07:37"
+      }
+    ],
+    "images_count": 1,
+    "media_files_count": 1,
+    "images_info": [
+      {
+        "message_id": "false_555197756708@c.us_3EB0AD7CB4D68F08B2A491",
+        "timestamp": "2025-10-27 10:07:35",
+        "from": "555197756708@c.us",
+        "to": "555198804804@c.us",
+        "size_kb": 3.4189453125
+      }
+    ]
+  },
+  "vanessa": {
+    "messages": [
+      {
+        "id": "true_555492710236@c.us_A53058EC4AA492FB2CE0CF7696A33DE9",
+        "timestamp": "2025-10-27 10:07:50",
+        "from": "555131026660@c.us",
+        "to": "555492710236@c.us",
+        "body": "",
+        "type": "ptt",
+        "hasMedia": true,
+        "data_recebimento": "2025-10-27 14:07:52"
+      },
+      {
+        "id": "false_555196880328@c.us_AC89E5866D1D0D2C415565606B5F2211",
+        "timestamp": "2025-10-27 10:09:58",
+        "from": "555196880328@c.us",
+        "to": "555131026660@c.us",
+        "body": "Bom dia, tudo bem?",
+        "type": "chat",
+        "hasMedia": false,
+        "data_recebimento": "2025-10-27 14:10:00"
+      },
+      {
+        "id": "true_555196880328@c.us_A5DE647FA4D8F81AB6A7601B0E75F20E",
+        "timestamp": "2025-10-27 10:10:46",
+        "from": "555131026660@c.us",
+        "to": "555196880328@c.us",
+        "body": "Bom dia",
+        "type": "chat",
+        "hasMedia": false,
+        "data_recebimento": "2025-10-27 14:10:47"
+      },
+      {
+        "id": "false_555196880328@c.us_ACFCA6F251E4E52EFAD299452428AF6A",
+        "timestamp": "2025-10-27 10:11:02",
+        "from": "555196880328@c.us",
+        "to": "555131026660@c.us",
+        "body": "Conseguiria separa um tapa furo jequitiba trend arauco",
+        "type": "chat",
+        "hasMedia": false,
+        "data_recebimento": "2025-10-27 14:11:03"
+      },
+      {
+        "id": "false_555196880328@c.us_ACCCDE2BADA5711C2FB71887A7E46EA7",
+        "timestamp": "2025-10-27 10:11:16",
+        "from": "555196880328@c.us",
+        "to": "555131026660@c.us",
+        "body": "Marcelo iria passar aí pegar de meio dia",
+        "type": "chat",
+        "hasMedia": false,
+        "data_recebimento": "2025-10-27 14:11:17"
+      }
+    ],
+    "images_count": 0,
+    "media_files_count": 0,
+    "images_info": []
+  },
+  "pedro": {
+    "messages": [
+      {
+        "id": "false_120363026836676805@g.us_ACE47086CAB92873A362FF6D112C06B6_107756635856965@lid",
+        "timestamp": "2025-10-27 10:08:13",
+        "from": "120363026836676805@g.us",
+        "to": "555193123053@c.us",
+        "body": "🔥 Preçãooo\n\n[Mercado Livre] Kit De Internet Via Satelite Starlink Mini\n\n🎟️ Cupom: EIVOCE\n\n🔥 R$ 674,50 no pix \n\n🛒 https://promobyte.site/p/l3gbE0Wd7b",
+        "type": "chat",
+        "hasMedia": false,
+        "data_recebimento": "2025-10-27 14:08:15"
+      },
+      {
+        "id": "false_120363024074134563@g.us_AC1988C4E2C9977BC160A19ABBABC389_107756635856965@lid",
+        "timestamp": "2025-10-27 10:08:37",
+        "from": "120363024074134563@g.us",
+        "to": "555193123053@c.us",
+        "body": "🔥 Preçãooo\n\n[Mercado Livre] Kit De Internet Via Satelite Starlink Mini\n\n🎟️ Cupom: EIVOCE\n\n🔥 R$ 674,50 no pix \n\n🛒 https://promobyte.site/p/l3gbE0Wd7b",
+        "type": "chat",
+        "hasMedia": false,
+        "data_recebimento": "2025-10-27 14:08:40"
+      },
+      {
+        "id": "false_120363021046695044@g.us_ACA5F860649BD459B688B797C011A77D_107756635856965@lid",
+        "timestamp": "2025-10-27 10:09:54",
+        "from": "120363021046695044@g.us",
+        "to": "555193123053@c.us",
+        "body": "🔥 Preçãooo\n\n[Mercado Livre] Kit De Internet Via Satelite Starlink Mini\n\n🎟️ Cupom: EIVOCE\n\n🔥 R$ 674,50 no pix \n\n🛒 https://promobyte.site/p/l3gbE0Wd7b",
+        "type": "chat",
+        "hasMedia": false,
+        "data_recebimento": "2025-10-27 14:09:57"
+      },
+      {
+        "id": "false_120363021046695044@g.us_ACCF6910506695167F3431C9E2DA113D_220525532065994@lid",
+        "timestamp": "2025-10-27 10:10:29",
+        "from": "120363021046695044@g.us",
+        "to": "555193123053@c.us",
+        "body": "[Mercado Livre] Berço Portátil Infantil Cercado Desmontável Lune Maxi Baby - Cinza\n\n🎟️ Cupom: EIVOCE\n\n🔥 R$ 239,92 \n\n🛒 https://promobyte.site/p/TRq6DyW0Qv",
+        "type": "image",
+        "hasMedia": true,
+        "data_recebimento": "2025-10-27 14:10:31"
+      }
+    ],
+    "images_count": 1,
+    "media_files_count": 1,
+    "images_info": [
+      {
+        "message_id": "false_120363021046695044@g.us_ACCF6910506695167F3431C9E2DA113D_220525532065994@lid",
+        "timestamp": "2025-10-27 10:10:29",
+        "from": "120363021046695044@g.us",
+        "to": "555193123053@c.us",
+        "size_kb": 111.5302734375
+      }
+    ]
+  }
+}

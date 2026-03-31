@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Plano de Corte (Mobile)</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">Plano de Corte</div>
+      <div class="actions">
+        <button id="btnZoomIn" class="btn">+</button>
+        <button id="btnZoomOut" class="btn">−</button>
+        <button id="btnReset" class="btn">Reset</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel">
+        <h2>Chapa</h2>
+        <div class="grid">
+          <label>
+            Comprimento (mm)
+            <input id="sheetLength" type="number" inputmode="decimal" value="1840" />
+          </label>
+          <label>
+            Largura (mm)
+            <input id="sheetWidth" type="number" inputmode="decimal" value="2740" />
+          </label>
+          <label>
+            Espessura (mm)
+            <input id="sheetThickness" type="number" inputmode="decimal" value="18" />
+          </label>
+          <label>
+            Material
+            <input id="sheetMaterial" type="text" value="MDF" />
+          </label>
+        </div>
+
+        <div class="row">
+          <button id="btnAddCut" class="btn primary">Adicionar corte</button>
+          <button id="btnLoadSample" class="btn ghost">Exemplo</button>
+        </div>
+
+        <div class="cuts">
+          <div class="cuts-header">
+            <span>Tipo</span>
+            <span>Cota (mm)</span>
+            <span>Rep</span>
+            <span></span>
+          </div>
+          <div id="cutsList" class="cuts-list"></div>
+        </div>
+
+        <div class="row">
+          <button id="btnRender" class="btn primary">Gerar plano</button>
+          <button id="btnClear" class="btn ghost">Limpar</button>
+        </div>
+      </section>
+
+      <section class="viewer">
+        <div class="canvas-wrap">
+          <canvas id="planCanvas" width="900" height="1400"></canvas>
+        </div>
+        <div id="status" class="status">Pronto.</div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

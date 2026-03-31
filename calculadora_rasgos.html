@@ -1,0 +1,393 @@
+<!  doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Calculadora de Frisos para Dobra</title>
+  <style>
+    body{font-family: system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;margin:18px;background:#0f172a;color:#e6eef8}
+    .card{background:#0b1220;padding:18px;border-radius:10px;box-shadow:0 8px 30px rgba(2,6,23,0.6);max-width:900px;margin:auto}
+    label{display:block;margin-top:10px;font-size:14px;font-weight: 500}
+    input,select{width:100%;padding:8px;margin-top:6px;border-radius:6px;border:1px solid #24324a;background:#071126;color:#e6eef8}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    button{margin-top:12px;padding:10px 14px;border-radius:8px;border:0;background:#0ea5a1;color:#012;cursor:pointer;font-weight:600}
+    button:hover{background:#0c8d8a}
+    pre{background:#021126;padding:12px;border-radius:8px;overflow: auto;line-height:1.6}
+    .small{font-size:13px;color:#9fb0c9;line-height:1.5}
+    .output{margin-top:12px}
+    .radio-group{display:flex;gap:20px;margin-top:8px}
+    .radio-group label{display:flex;align-items:center;gap:8px;margin: 0;cursor:pointer}
+    .radio-group input[type="radio"]{width:auto;margin: 0}
+    .info-box{background:#1a2332;padding:12px;border-radius: 6px;margin-top:8px;font-size:13px;color:#9fb0c9}
+    .highlight{background:#2a3f5f;border-left:3px solid #0ea5a1;padding-left:8px}
+    .section-divider{border-top:2px solid #34495e;margin:25px 0;padding-top:20px}
+    .disabled{opacity:0.5;pointer-events:none}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>🔧 Calculadora de Frisos para Dobra</h2>
+    <p class="small">Ferramenta para calcular frisos de dobra e gerar arquivo .programa para CNC</p>
+
+    <h3 style="color:#0ea5a1;margin-top:20px">📏 Dimensões do Material</h3>
+    <div class="grid">
+      <div>
+        <label>Largura do material (mm)</label>
+        <input id="larguraMaterial" type="number" placeholder="2240" step="0.1" />
+        <div class="info-box">Largura física do material (eixo X)</div>
+      </div>
+      <div>
+        <label>Altura do material (mm)</label>
+        <input id="alturaMaterial" type="number" placeholder="450" step="0.1" />
+        <div class="info-box">Altura total disponível (eixo Y)</div>
+      </div>
+      <div>
+        <label>Comprimento final com frisos (mm) <span style="color:#0ea5a1">(deixe vazio para frizar toda a peça)</span></label>
+        <input id="comprimentoFinal" type="number" placeholder="Auto (toda a peça)" step="0.1" />
+        <div class="info-box">Se vazio, utiliza toda a altura do material</div>
+      </div>
+      <div>
+        <label>Nome do programa</label>
+        <input id="programName" type="text" placeholder="FRISOS" />
+        <div class="info-box">Nome do arquivo .programa</div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+    <h3 style="color:#0ea5a1">✂️ Configuração dos Frisos</h3>
+
+    <div class="grid">
+      <div>
+        <label>Espessura da serra (mm)</label>
+        <input id="espessuraSerra" type="number" step="0.1" value="2.5" />
+        <div class="info-box">Largura da lâmina da serra</div>
+      </div>
+      <div>
+        <label>Casas decimais nos resultados</label>
+        <select id="decimais">
+          <option value="1" selected>1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;padding:15px;background:#1a2332;border-radius:8px">
+      <label style="font-size:15px;margin-bottom:10px">🔹 Modo de Cálculo do Espaçamento</label>
+      <div class="radio-group">
+        <label>
+          <input type="radio" name="modoCalculo" value="auto" checked onchange="toggleModoCalculo()">
+          <span>Automático (calcula baseado no comprimento final)</span>
+        </label>
+        <label>
+          <input type="radio" name="modoCalculo" value="fixo" onchange="toggleModoCalculo()">
+          <span>Espaçamento Fixo (valor definido)</span>
+        </label>
+      </div>
+
+      <div class="grid" style="margin-top:12px">
+        <div id="nFrisosField">
+          <label>Número de frisos <span style="color:#0ea5a1">(deixe vazio para auto)</span></label>
+          <input id="nFrisos" type="number" placeholder="Auto" />
+          <div class="info-box">Se vazio, calcula automaticamente</div>
+        </div>
+        <div id="espacamentoFixoField" class="disabled">
+          <label>Espaçamento fixo (mm)</label>
+          <input id="espacamentoFixo" type="number" step="0.1" placeholder="3.0" />
+          <div class="info-box">Distância fixa entre frisos (ex: 3mm)</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:15px">
+      <label>Borda inicial (mm) <span style="color:#0ea5a1">(deixe vazio para dividir igualmente)</span></label>
+      <input id="bordaInicial" type="number" step="0.1" placeholder="Auto" />
+      <div class="info-box">Se vazio, divide a sobra igualmente entre início e fim</div>
+    </div>
+
+    <button id="calc">📊 Calcular</button>
+    <button id="genXml">📥 Gerar e Baixar .programa</button>
+
+    <div class="output" id="out"></div>
+
+    <h3 style="margin-top:25px">📖 Como usar</h3>
+    <div class="small">
+      <p><strong>🤖 Modo Automático:</strong> O sistema calcula o espaçamento ideal baseado no comprimento final desejado.</p>
+      <p><strong>🔧 Modo Fixo:</strong> Você define um espaçamento fixo (ex: 3mm).Fórmula: Serra + Espaçamento = 2.5 + 3 = 5.5mm por friso</p>
+      <p><strong>📐 Bordas:</strong> Por padrão, divididas igualmente. Você pode fixar a borda inicial se desejar.</p>
+      <p><strong>💡 Exemplo:</strong> Material 450mm, final 400mm, 54 frisos de 3mm = bordas de 73mm (início) + 77mm (fim)</p>
+    </div>
+  </div>
+
+<script>
+  function round(v, d){return Math.round(v*Math.pow(10,d))/Math.pow(10,d)}
+  
+  function toggleModoCalculo(){
+    const modo = document.querySelector('input[name="modoCalculo"]:checked').value;
+    const espacamentoField = document.getElementById('espacamentoFixoField');
+    
+    if(modo === 'fixo'){
+      espacamentoField.classList.remove('disabled');
+    } else {
+      espacamentoField.classList.add('disabled');
+    }
+  }
+  
+  document.getElementById('calc').addEventListener('click', ()=>{
+    const alturaMaterial = Number(document.getElementById('alturaMaterial').value);
+    const comprimentoFinalInput = document.getElementById('comprimentoFinal').value;
+    const espessuraSerra = Number(document.getElementById('espessuraSerra').value);
+    const decimais = Number(document.getElementById('decimais').value);
+    const modoCalculo = document.querySelector('input[name="modoCalculo"]:checked').value;
+    const nFrisosInput = document.getElementById('nFrisos').value;
+    const bordaInicialInput = document.getElementById('bordaInicial').value;
+    
+    if(!alturaMaterial || !espessuraSerra){
+      alert('⚠️ Preencha todos os campos obrigatórios!');
+      return;
+    }
+    
+    const BORDA_FINAL_MIN = 45;
+    const bordaInicialPrelim = (bordaInicialInput !== '' && bordaInicialInput !== null) ? Number(bordaInicialInput) : 0;
+
+    // Se comprimento final não informado, friza toda a peça reservando 45mm mínimo no final
+    const fricandoTudo = (comprimentoFinalInput === '' || comprimentoFinalInput === null);
+    const comprimentoFinal = fricandoTudo
+      ? alturaMaterial - espessuraSerra - bordaInicialPrelim - BORDA_FINAL_MIN
+      : Number(comprimentoFinalInput);
+    
+    if(comprimentoFinal <= 0){
+      alert('⚠️ Material muito pequeno para frizar com borda final mínima de 45mm!');
+      return;
+    }
+
+    if(comprimentoFinal + espessuraSerra > alturaMaterial){
+      alert('⚠️ Comprimento final + serra não cabe na altura do material!');
+      return;
+    }
+    
+    let nFrisos;
+    let espacamento;
+    let bordaInicial, bordaFinal;
+    let autoFrisos = false;
+    
+    const sobraTotal = alturaMaterial - espessuraSerra - comprimentoFinal;
+    
+    if(modoCalculo === 'fixo'){
+      // Modo Fixo: espaçamento definido pelo usuário
+      espacamento = Number(document.getElementById('espacamentoFixo').value);
+      
+      if(! espacamento || espacamento <= 0){
+        alert('⚠️ Defina um espaçamento válido!');
+        return;
+      }
+      
+      const frisoCompleto = espessuraSerra + espacamento;
+      
+      if(nFrisosInput === '' || nFrisosInput === null){
+        // Calcula número de frisos automaticamente garantindo borda final >= 45mm
+        const nFrisosMax = Math.floor((alturaMaterial - espessuraSerra - bordaInicialPrelim - BORDA_FINAL_MIN) / frisoCompleto);
+        nFrisos = Math.min(Math.floor(comprimentoFinal / frisoCompleto), nFrisosMax);
+        autoFrisos = true;
+        
+        if(nFrisos < 1) nFrisos = 1;
+      } else {
+        nFrisos = Number(nFrisosInput);
+      }
+      
+      // Calcula bordas (desconta serra de separação)
+      const espacoUsado = nFrisos * frisoCompleto;
+      const sobraRestante = alturaMaterial - espessuraSerra - espacoUsado;
+      
+      if(bordaInicialInput !== '' && bordaInicialInput !== null){
+        bordaInicial = Number(bordaInicialInput);
+        bordaFinal = sobraRestante - bordaInicial;
+      } else {
+        // Dá preferência à borda final para garantir mínimo de 45mm
+        bordaFinal = Math.max(BORDA_FINAL_MIN, sobraRestante);
+        bordaInicial = sobraRestante - bordaFinal;
+        if(bordaInicial < 0) bordaInicial = 0;
+      }
+      
+    } else {
+      // Modo Automático: calcula espaçamento baseado no comprimento final
+      
+      if(nFrisosInput === '' || nFrisosInput === null){
+        // FÓRMULA: comprimentoFinal / (espacamentoEstimado + espessuraSerra)
+        // Cada Y = espaço + serra. Ex: 140 / (3 + 2.5) = 25 rasgos no friso
+        const espacamentoEstimado = 3;
+        const frisoCompleto = espacamentoEstimado + espessuraSerra;
+        nFrisos = Math.floor(comprimentoFinal / frisoCompleto);
+        autoFrisos = true;
+        
+        if(nFrisos < 1) nFrisos = 1;
+      } else {
+        nFrisos = Number(nFrisosInput);
+      }
+      
+      // Calcula bordas primeiro
+      if(bordaInicialInput !== '' && bordaInicialInput !== null){
+        bordaInicial = Number(bordaInicialInput);
+        bordaFinal = sobraTotal - bordaInicial;
+      } else {
+        // Dá preferência à borda final para garantir mínimo de 45mm
+        bordaFinal = Math.max(BORDA_FINAL_MIN, sobraTotal);
+        bordaInicial = sobraTotal - bordaFinal;
+        if(bordaInicial < 0) bordaInicial = 0;
+      }
+      
+      // Calcula espaçamento automaticamente
+      // FÓRMULA: comprimentoFinal = N × (espacamento + serra)
+      // espacamento = comprimentoFinal / N - serra
+      espacamento = (comprimentoFinal - (nFrisos * espessuraSerra)) / nFrisos;
+    }
+    
+    const frisoCompleto = espessuraSerra + espacamento;
+    const numCortes = nFrisos + 1; // Total de rasgos (N frisos + 1 separação)
+    const comprimentoRealFinal = nFrisos * frisoCompleto;
+    const total = bordaInicial + espessuraSerra + comprimentoRealFinal + bordaFinal;
+    
+    let html = `<pre>✅ Resultados:\n`;
+    html += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    html += `📊 Configuração:\n`;
+    html += `   Modo: ${modoCalculo === 'fixo' ? 'ESPAÇAMENTO FIXO' : 'AUTOMÁTICO'}\n`;
+    if(fricandoTudo) html += `   Comprimento final: TODA A PEÇA (${round(comprimentoFinal, decimais)} mm, borda final mín. ${BORDA_FINAL_MIN}mm) ✨\n`;
+    html += `   Espessura da serra: ${round(espessuraSerra, decimais)} mm\n`;
+    html += `\n🔧 Frisos:\n`;
+    if(autoFrisos) html += `   Nº de espaços: ${nFrisos} (AUTO ✨)\n`;
+    else html += `   Nº de espaços: ${nFrisos}\n`;
+    html += `   Nº de rasgos/cortes: ${numCortes} (${nFrisos} frisos + 1 separação)\n`;
+    html += `   Espaçamento (cada): ${round(espacamento, decimais)} mm\n`;
+    html += `   Friso completo: ${round(frisoCompleto, decimais)} mm (${round(espessuraSerra, decimais)} + ${round(espacamento, decimais)})\n`;
+    html += `\n🎯 Bordas:\n`;
+    html += `   Borda inicial: ${round(bordaInicial, decimais)} mm\n`;
+    html += `   ↳ Corte RY no CNC: ${round(bordaInicial + espessuraSerra, decimais)} mm (borda + serra)\n`;
+    html += `   Borda final: ${round(bordaFinal, decimais)} mm${bordaFinal < BORDA_FINAL_MIN ? ' ⚠️ ABAIXO DO MÍNIMO!' : ' ✅'}\n`;
+    if(bordaFinal < BORDA_FINAL_MIN) html += `   ❌ ATENÇÃO: Borda final mínima é ${BORDA_FINAL_MIN}mm (limite físico da máquina)!\n`;
+    html += `   Sobra total (bordas + serra): ${round(bordaInicial + espessuraSerra + bordaFinal, decimais)} mm\n`;
+    html += `\n📏 Medidas totais:\n`;
+    html += `   Altura material: ${round(alturaMaterial, decimais)} mm\n`;
+    html += `   Comprimento final desejado: ${round(comprimentoFinal, decimais)} mm\n`;
+    html += `   Comprimento real (frisos): ${round(comprimentoRealFinal, decimais)} mm\n`;
+    html += `   Total calculado: ${round(total, decimais)} mm\n`;
+    html += `\n🔄 Sequência:  Borda(${round(bordaInicial, decimais)}) + Serra(${round(espessuraSerra, decimais)}) → ${nFrisos}× [Espaço(${round(espacamento, decimais)}) + Serra(${round(espessuraSerra, decimais)})] → Borda(${round(bordaFinal, decimais)})\n`;
+    html += `   📐 Fórmula: ${round(bordaInicial, decimais)} + ${round(espessuraSerra, decimais)} + ${nFrisos} × ${round(frisoCompleto, decimais)} + ${round(bordaFinal, decimais)} = ${round(total, decimais)}mm</pre>`;
+
+    document.getElementById('out').innerHTML = html;
+    
+    window._lastCalc = {
+      nFrisos, numCortes, espacamento, espessuraSerra, 
+      bordaInicial, bordaFinal, decimais,
+      alturaMaterial, comprimentoFinal, fricandoTudo,
+      frisoCompleto, modoCalculo
+    };
+  });
+
+  function download(filename, text){
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([text], {type: 'text/xml'}));
+    a.download = filename;
+    document.body.appendChild(a); 
+    a.click(); 
+    a.remove();
+  }
+
+  document.getElementById('genXml').addEventListener('click', ()=>{
+    const data = window._lastCalc;
+    if(! data){
+      alert('⚠️ Primeiro clique em Calcular!');
+      return;
+    }
+    
+    let {nFrisos, numCortes, espacamento, espessuraSerra, bordaInicial, decimais, alturaMaterial, frisoCompleto} = data;
+    
+    const larguraMaterial = Number(document.getElementById('larguraMaterial').value);
+    const programName = document.getElementById('programName').value.trim() || 'FRISOS';
+    if(! larguraMaterial){
+      alert('⚠️ Preencha a largura do material! ');
+      return;
+    }
+    
+    // ✅ CORREÇÃO: Função que garante formato numérico correto SEM espaços
+    const cleanNum = (n, d) => {
+      return Number(n).toFixed(d).replace(/\s/g, '');
+    };
+    
+    // Descrição do programa - mostra espaços e rasgos
+    const descricao = `${cleanNum(espacamento, 1)}mm ${nFrisos} rasgos - ${cleanNum(alturaMaterial, 0)}mm`;
+    
+    let xml = `<programa id="1">\n`;
+    xml += `  <descricao>${descricao}</descricao>\n`;
+    xml += `  <nome>${programName}</nome>\n`;
+    xml += `  <material>1</material>\n`;
+    xml += `  <espessuraSerra>${cleanNum(espessuraSerra, 1)}</espessuraSerra>\n`;
+    xml += `  <largura>${cleanNum(larguraMaterial, 1)}</largura>\n`;
+    xml += `  <comprimento>${cleanNum(alturaMaterial, 1)}</comprimento>\n`;
+    xml += `  <espessura>18.0</espessura>\n`;
+    xml += `  <empilhamentoMaximo>60.0</empilhamentoMaximo>\n`;
+    xml += `  <lista id="2">\n`;
+
+    let id = 3;
+    let lid = 4;
+
+    // Borda inicial (RY) - valor = borda + serra para peça sair exata
+    const ryValor = bordaInicial + espessuraSerra;
+    xml += `    <corte id="${id}">\n`;
+    xml += `      <coordenada>RY</coordenada>\n`;
+    xml += `      <lista id="${lid}"/>\n`;
+    xml += `      <valor>${cleanNum(ryValor, decimais)}</valor>\n`;
+    xml += `      <quantidade>1</quantidade>\n`;
+    xml += `      <imprimeEtiquetaPeca>false</imprimeEtiquetaPeca>\n`;
+    xml += `      <imprimeEtiquetaSobra>false</imprimeEtiquetaSobra>\n`;
+    xml += `    </corte>\n`;
+    id += 2;
+    lid += 2;
+
+    // Frisos (Y) - repetidos N vezes (rasgos no comprimento final)
+    xml += `    <corte id="${id}">\n`;
+    xml += `      <coordenada>Y</coordenada>\n`;
+    xml += `      <lista id="${lid}"/>\n`;
+    xml += `      <valor>${cleanNum(espacamento, decimais)}</valor>\n`;
+    xml += `      <quantidade>${nFrisos}</quantidade>\n`;
+    xml += `      <imprimeEtiquetaPeca>false</imprimeEtiquetaPeca>\n`;
+    xml += `      <imprimeEtiquetaSobra>false</imprimeEtiquetaSobra>\n`;
+    xml += `    </corte>\n`;
+    id += 2;
+    lid += 2;
+
+    // Finalização Y*
+    xml += `    <corte id="${id}">\n`;
+    xml += `      <coordenada>Y*</coordenada>\n`;
+    xml += `      <lista id="${lid}"/>\n`;
+    xml += `      <valor>0.0</valor>\n`;
+    xml += `      <quantidade>0</quantidade>\n`;
+    xml += `      <imprimeEtiquetaPeca>false</imprimeEtiquetaPeca>\n`;
+    xml += `      <imprimeEtiquetaSobra>false</imprimeEtiquetaSobra>\n`;
+    xml += `    </corte>\n`;
+    id += 2;
+    lid += 2;
+
+    // Corte final vazio
+    xml += `    <corte id="${id}">\n`;
+    xml += `      <lista id="${lid}"/>\n`;
+    xml += `      <valor>0.0</valor>\n`;
+    xml += `      <quantidade>0</quantidade>\n`;
+    xml += `      <imprimeEtiquetaPeca>false</imprimeEtiquetaPeca>\n`;
+    xml += `      <imprimeEtiquetaSobra>false</imprimeEtiquetaSobra>\n`;
+    xml += `    </corte>\n`;
+
+    xml += `  </lista>\n`;
+    xml += `</programa>`;
+    
+    download(`${programName}.programa`, xml);
+    alert('✅ Arquivo gerado: ' + programName + '.programa');
+  });
+
+  // Inicializar
+  document.addEventListener('DOMContentLoaded', function() {
+    toggleModoCalculo();
+  });
+</script>
+</body>
+</html>

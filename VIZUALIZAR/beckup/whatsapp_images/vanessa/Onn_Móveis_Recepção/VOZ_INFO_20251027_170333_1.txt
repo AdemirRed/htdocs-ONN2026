@@ -1,0 +1,7 @@
+Informações do Áudio:
+Timestamp: 20251027_170333
+Tipo: Mensagem de Voz
+Duração: 14s
+Tamanho: 32560 bytes
+URL: https://mmg.whatsapp.net/v/t62.7117-24/538029988_1291467756120940_6997031022932437786_n.enc?ccb=11-4&oh=01_Q5Aa2wFVrqkcdUkMGI58pcnukebT3gN0oxMpOwsF-PYiSws_6Q&oe=692757AA&_nc_sid=5e03e0&mms3=true
+Tipo MIME: audio/ogg; codecs=opus

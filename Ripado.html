@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS | Calculadora de Ripas Inteligente</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📏</text></svg>">
+    
+    <style>
+        /* Tema Nexus - Variáveis CSS */
+        :root {
+            --nexus-bg-primary: #0d1117;
+            --nexus-bg-secondary: #161b22;
+            --nexus-bg-tertiary: #21262d;
+            --nexus-bg-glass: rgba(33, 38, 45, 0.95);
+            --nexus-border: #30363d;
+            --nexus-text-primary: #f0f6fc;
+            --nexus-text-secondary: #8b949e;
+            --nexus-accent-blue: #58a6ff;
+            --nexus-accent-green: #3fb950;
+            --nexus-accent-purple: #a5a5ff;
+            --nexus-accent-orange: #ffa657;
+            --nexus-accent-cyan: #39d0d6;
+            --nexus-accent-red: #f85149;
+            --nexus-hover-bg: #30363d;
+            --nexus-focus-border: #1f6feb;
+            --nexus-shadow: rgba(0, 0, 0, 0.5);
+            --nexus-gradient-primary: linear-gradient(135deg, var(--nexus-accent-blue), var(--nexus-accent-purple));
+            --nexus-gradient-secondary: linear-gradient(135deg, var(--nexus-accent-green), var(--nexus-accent-cyan));
+            --nexus-gradient-warning: linear-gradient(135deg, var(--nexus-accent-orange), #d29922);
+            --nexus-gradient-danger: linear-gradient(135deg, var(--nexus-accent-red), #da3633);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, var(--nexus-bg-primary) 0%, var(--nexus-bg-secondary) 100%);
+            color: var(--nexus-text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
+
+        /* Header Principal */
+        .main-header {
+            background: var(--nexus-bg-glass);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid var(--nexus-border);
+            box-shadow: 0 4px 32px var(--nexus-shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--nexus-gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 20px rgba(88, 166, 255, 0.3);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: var(--nexus-gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-subtitle {
+            font-size: 0.9rem;
+            color: var(--nexus-text-secondary);
+        }
+
+        .header-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background-color: var(--nexus-bg-tertiary);
+            border-radius: 25px;
+            border: 1px solid var(--nexus-border);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--nexus-gradient-secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .datetime-info {
+            font-size: 0.8rem;
+            color: var(--nexus-text-secondary);
+            text-align: right;
+        }
+
+        /* Container Principal */
+        .page-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        /* Card da Calculadora */
+        .calculator-card {
+            background: var(--nexus-bg-secondary);
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid var(--nexus-border);
+            box-shadow: 0 8px 32px var(--nexus-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calculator-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--nexus-gradient-primary);
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            background: var(--nexus-gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+        }
+
+        /* Formulário */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--nexus-text-primary);
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-label::before {
+            content: '▶';
+            color: var(--nexus-accent-blue);
+            font-size: 10px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            background-color: var(--nexus-bg-tertiary);
+            border: 2px solid var(--nexus-border);
+            border-radius: 10px;
+            color: var(--nexus-text-primary);
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--nexus-focus-border);
+            box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .form-input:hover {
+            border-color: var(--nexus-accent-blue);
+        }
+
+        .form-input[readonly] {
+            background-color: var(--nexus-bg-primary);
+            border-color: var(--nexus-border);
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        /* Radio Buttons */
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
+            background: var(--nexus-bg-tertiary);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--nexus-border);
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .radio-option:hover {
+            background-color: var(--nexus-hover-bg);
+        }
+
+        .radio-option input[type="radio"] {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--nexus-border);
+            border-radius: 50%;
+            background-color: var(--nexus-bg-primary);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .radio-option input[type="radio"]:checked {
+            border-color: var(--nexus-accent-blue);
+            background-color: var(--nexus-accent-blue);
+        }
+
+        .radio-option input[type="radio"]:checked::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: white;
+        }
+
+        /* Botões */
+        .buttons-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--nexus-gradient-primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(88, 166, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(88, 166, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--nexus-gradient-warning);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 166, 87, 0.3);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 166, 87, 0.4);
+        }
+
+        /* Resultados */
+        .results-section {
+            margin-top: 25px;
+            padding: 20px;
+            background: var(--nexus-bg-tertiary);
+            border-radius: 10px;
+            border: 1px solid var(--nexus-border);
+        }
+
+        .results-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--nexus-accent-green);
+            text-align: center;
+        }
+
+        /* Card de Visualização */
+        .visualization-card {
+            background: var(--nexus-bg-secondary);
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid var(--nexus-border);
+            box-shadow: 0 8px 32px var(--nexus-shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .visualization-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            background: var(--nexus-gradient-secondary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+        }
+
+        #visualizationCanvas {
+            border: 2px solid var(--nexus-border);
+            border-radius: 10px;
+            background: var(--nexus-bg-tertiary);
+            box-shadow: 0 4px 16px var(--nexus-shadow);
+            max-width: 100%;
+        }
+
+        .dimensions-label {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background: var(--nexus-bg-tertiary);
+            border-radius: 8px;
+            border: 1px solid var(--nexus-border);
+            font-size: 14px;
+            color: var(--nexus-text-primary);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* Legenda */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 15px;
+            padding: 15px;
+            background: var(--nexus-bg-tertiary);
+            border-radius: 10px;
+            border: 1px solid var(--nexus-border);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: var(--nexus-bg-primary);
+            border-radius: 6px;
+            border: 1px solid var(--nexus-border);
+        }
+
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--nexus-border);
+            border-radius: 4px;
+        }
+
+        /* Estatísticas Rápidas */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: var(--nexus-bg-tertiary);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--nexus-border);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--nexus-accent-blue);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--nexus-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Responsivo */
+        @media (max-width: 1024px) {
+            .page-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px 10px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .radio-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .buttons-container {
+                flex-direction: column;
+            }
+
+            .quick-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .calculator-card,
+            .visualization-card {
+                padding: 20px;
+            }
+
+            .card-title,
+            .visualization-title {
+                font-size: 1.5rem;
+            }
+
+            #visualizationCanvas {
+                width: 100%;
+                height: 300px;
+            }
+
+            .quick-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animações */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-container > * {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--nexus-bg-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--nexus-border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--nexus-accent-blue);
+        }
+
+        /* Cores das seções de ripas */
+        .ripa-colors {
+            --ripa-1: #8B4513;
+            --ripa-2: #A0522D;
+            --ripa-3: #CD853F;
+            --ripa-4: #D2691E;
+            --ripa-5: #B8860B;
+            --ripa-6: #DAA520;
+            --ripa-7: #6B8E23;
+            --ripa-8: #556B2F;
+            --ripa-9: #2E8B57;
+            --ripa-10: #228B22;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Principal -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-icon">📏</div>
+                <div class="logo-text">
+                    <div class="logo-title">NEXUS</div>
+                    <div class="logo-subtitle">Calculadora de Ripas Inteligente</div>
+                </div>
+            </div>
+            <div class="header-info">
+                <div class="user-badge">
+                    <div class="user-avatar">{DEV}</div>
+                    <span> Ademir</span>
+                </div>
+                <div class="datetime-info">
+                    <div>📅 20/06/2025</div>
+                    <div>⏰ <span id="current-time">16:50:54</span></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-container">
+        <!-- Card da Calculadora -->
+        <div class="calculator-card">
+            <h1 class="card-title">📏 Calculadora de Ripas</h1>
+            
+            <form id="calcForm">
+                <div class="form-group">
+                    <label class="form-label" for="quantity">📦 Quantidade de Ripas</label>
+                    <input type="number" id="quantity" class="form-input" placeholder="Ex: 10" required min="1">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="height">📏 Altura (mm)</label>
+                    <input type="number" id="height" class="form-input" placeholder="Ex: 2740" required value="2740" min="1">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="width">📐 Largura (mm)</label>
+                    <input type="number" id="width" class="form-input" placeholder="Ex: 18" required value="18" min="1">
+                </div>
+
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="calculationType" value="width" checked>
+                        <span>📐 Calcular pela Largura</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="calculationType" value="height">
+                        <span>📏 Calcular pela Altura</span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="split">✂️ Dividir em quantas peças? (opcional)</label>
+                    <input type="number" id="split" class="form-input" placeholder="Ex: 2" value="1" min="1">
+                </div>
+
+                <div class="buttons-container">
+                    <button type="button" class="btn btn-primary" onclick="calculate()">
+                        🧮 Calcular
+                    </button>
+                    <a href="http://192.168.0.201/materiais.php" class="btn btn-secondary">
+                        ← Voltar
+                    </a>
+                </div>
+            </form>
+
+            <!-- Estatísticas Rápidas -->
+            <div class="quick-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-waste">0mm</div>
+                    <div class="stat-label">🗑️ Desperdício</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-efficiency">100%</div>
+                    <div class="stat-label">⚡ Eficiência</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-cuts">0</div>
+                    <div class="stat-label">✂️ Cortes</div>
+                </div>
+            </div>
+
+            <!-- Resultados -->
+            <div class="results-section">
+                <div class="results-title">📊 Resultados do Cálculo</div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="totalSize">📐 Tamanho total necessário:</label>
+                    <input type="text" id="totalSize" class="form-input" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="pieceSize">📏 Tamanho por peça:</label>
+                    <input type="text" id="pieceSize" class="form-input" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="finalPieces">🔢 Quantidade de peças:</label>
+                    <input type="text" id="finalPieces" class="form-input" readonly>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card de Visualização -->
+        <div class="visualization-card">
+            <h2 class="visualization-title">👁️ Visualização 3D das Ripas</h2>
+            
+            <canvas id="visualizationCanvas" width="650" height="400"></canvas>
+            
+            <div class="dimensions-label" id="dimensionsLabel">
+                📏 Configure os parâmetros para ver a visualização
+            </div>
+            
+            <div class="legend" id="colorLegend">
+                <div style="color: var(--nexus-text-secondary); font-style: italic;">
+                    🎨 As cores aparecerão quando houver múltiplas peças
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Define cores para diferentes seções (tema Nexus)
+        const sectionColors = [
+            '#58a6ff', // Nexus Blue
+            '#3fb950', // Nexus Green
+            '#a5a5ff', // Nexus Purple
+            '#ffa657', // Nexus Orange
+            '#39d0d6', // Nexus Cyan
+            '#f85149', // Nexus Red
+            '#8B4513', // Marrom escuro
+            '#A0522D', // Sienna
+            '#CD853F', // Peru
+            '#D2691E'  // Chocolate
+        ];
+        
+        // Inicializar com valores padrão ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            calculate();
+            updateTime();
+            setInterval(updateTime, 1000);
+        });
+
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('current-time').textContent = now.toLocaleTimeString('pt-BR');
+        }
+
+        function formatMeasurement(value) {
+            if (value >= 1000) {
+                return value.toFixed(1).replace(".", ",");
+            } else {
+                return Math.round(value).toString().replace(".", ",");
+            }
+        }
+
+        function calculate() {
+            const quantity = parseInt(document.getElementById('quantity').value) || 1;
+            const height = parseFloat(document.getElementById('height').value) || 2740;
+            const width = parseFloat(document.getElementById('width').value) || 18;
+            const split = parseInt(document.getElementById('split').value) || 1;
+            const calculationType = document.querySelector('input[name="calculationType"]:checked').value;
+            const cutThickness = 6; // Espessura do corte
+
+            if (!quantity || !height || !width) {
+                alert("⚠️ Por favor, preencha todos os campos obrigatórios.");
+                return;
+            }
+
+            let totalSize;
+            let pieceSize;
+            let pieceHeight;
+            let pieceWidth;
+            let totalCuts;
+
+            if (calculationType === "width") {
+                totalSize = (width + cutThickness) * quantity - cutThickness;
+                pieceSize = totalSize / split;
+                pieceHeight = height;
+                pieceWidth = pieceSize;
+                totalCuts = quantity - 1 + (split - 1);
+            } else {
+                totalSize = (height + cutThickness) * quantity - cutThickness;
+                pieceSize = totalSize / split;
+                pieceHeight = pieceSize;
+                pieceWidth = width;
+                totalCuts = quantity - 1 + (split - 1);
+            }
+
+            // Calcular estatísticas
+            const waste = (cutThickness * (quantity - 1));
+            const efficiency = ((totalSize - waste) / totalSize) * 100;
+
+            // Exibir valores nos campos
+            document.getElementById('totalSize').value = formatMeasurement(totalSize) + " mm";
+            document.getElementById('pieceSize').value = formatMeasurement(pieceSize) + " mm";
+            document.getElementById('finalPieces').value = split + " peças";
+
+            // Atualizar estatísticas
+            document.getElementById('stat-waste').textContent = formatMeasurement(waste) + "mm";
+            document.getElementById('stat-efficiency').textContent = efficiency.toFixed(1) + "%";
+            document.getElementById('stat-cuts').textContent = totalCuts;
+
+            // Atualizar visualização
+            drawVisualization(quantity, height, width, split, calculationType, cutThickness);
+        }
+
+        function drawVisualization(quantity, height, width, split, calculationType, cutThickness) {
+            const canvas = document.getElementById('visualizationCanvas');
+            const ctx = canvas.getContext('2d');
+            const maxWidth = canvas.width - 80;
+            const maxHeight = canvas.height - 80;
+            
+            // Limpar canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Gradiente de fundo
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#21262d');
+            gradient.addColorStop(1, '#161b22');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Calcular escala e posicionamento
+            let scale = 1;
+            let totalLength;
+            
+            if (calculationType === "width") {
+                totalLength = (width + cutThickness) * quantity - cutThickness;
+                if (totalLength > maxWidth) scale = maxWidth / totalLength;
+                if (height * scale > maxHeight) scale = maxHeight / height;
+            } else {
+                totalLength = (height + cutThickness) * quantity - cutThickness;
+                if (totalLength > maxHeight) scale = maxHeight / totalLength;
+                if (width * scale > maxWidth) scale = maxWidth / width;
+            }
+            
+            scale = Math.min(scale * 0.9, 2); // Limitar escala máxima
+            
+            // Centralizar
+            let startX = (canvas.width - (calculationType === "width" ? totalLength * scale : width * scale)) / 2;
+            let startY = (canvas.height - (calculationType === "height" ? totalLength * scale : height * scale)) / 2;
+            
+            // Limpar legenda
+            const legendDiv = document.getElementById('colorLegend');
+            legendDiv.innerHTML = '';
+            
+            // Desenhar ripas
+            ctx.lineWidth = 2;
+            
+            if (calculationType === "width") {
+                let currentX = startX;
+                const pieceWidth = (totalLength / split) * scale;
+                
+                for (let s = 0; s < split; s++) {
+                    const colorIndex = s % sectionColors.length;
+                    const baseColor = sectionColors[colorIndex];
+                    
+                    // Criar gradiente para cada peça
+                    const pieceGradient = ctx.createLinearGradient(
+                        currentX, startY, 
+                        currentX, startY + height * scale
+                    );
+                    pieceGradient.addColorStop(0, baseColor);
+                    pieceGradient.addColorStop(0.5, lightenColor(baseColor, 20));
+                    pieceGradient.addColorStop(1, darkenColor(baseColor, 20));
+                    
+                    ctx.fillStyle = pieceGradient;
+                    ctx.strokeStyle = darkenColor(baseColor, 40);
+                    
+                    if (split > 1) {
+                        addToLegend(`Peça ${s+1}`, baseColor);
+                    }
+                    
+                    // Desenhar ripas da peça
+                    const ripasPerPiece = Math.ceil(quantity / split);
+                    let subWidth = 0;
+                    
+                    for (let i = 0; i < ripasPerPiece; i++) {
+                        if (s * ripasPerPiece + i < quantity) {
+                            const scaledWidth = width * scale;
+                            const scaledHeight = height * scale;
+                            
+                            // Sombra da ripa
+                            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+                            ctx.fillRect(currentX + subWidth + 2, startY + 2, scaledWidth, scaledHeight);
+                            
+                            // Ripa principal
+                            ctx.fillStyle = pieceGradient;
+                            ctx.fillRect(currentX + subWidth, startY, scaledWidth, scaledHeight);
+                            ctx.strokeRect(currentX + subWidth, startY, scaledWidth, scaledHeight);
+                            
+                            // Texto de dimensão
+                            if (scaledWidth > 40 && scaledHeight > 25) {
+                                ctx.fillStyle = '#ffffff';
+                                ctx.font = 'bold 11px Arial';
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'middle';
+                                ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+                                ctx.lineWidth = 3;
+                                ctx.strokeText(`${width}×${height}`, currentX + subWidth + scaledWidth/2, startY + scaledHeight/2);
+                                ctx.fillText(`${width}×${height}`, currentX + subWidth + scaledWidth/2, startY + scaledHeight/2);
+                            }
+                            
+                            subWidth += (width + cutThickness) * scale;
+                        }
+                    }
+                    
+                    // Linha de corte entre peças
+                    if (s < split - 1) {
+                        ctx.beginPath();
+                        ctx.setLineDash([8, 4]);
+                        ctx.lineWidth = 4;
+                        ctx.strokeStyle = '#f85149';
+                        ctx.moveTo(currentX + pieceWidth, startY - 25);
+                        ctx.lineTo(currentX + pieceWidth, startY + height * scale + 25);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                        
+                        // Ícone de serra
+                        ctx.font = '20px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillStyle = '#f85149';
+                        ctx.fillText('⚡', currentX + pieceWidth, startY - 35);
+                    }
+                    
+                    currentX += pieceWidth;
+                }
+                
+                document.getElementById('dimensionsLabel').innerHTML = 
+                    `📏 <strong>Altura:</strong> ${height}mm | <strong>Largura Total:</strong> ${Math.round(totalLength)}mm | <strong>Por Peça:</strong> ${Math.round(totalLength/split)}mm`;
+                
+            } else {
+                // Lógica similar para altura
+                let currentY = startY;
+                const pieceHeight = (totalLength / split) * scale;
+                
+                for (let s = 0; s < split; s++) {
+                    const colorIndex = s % sectionColors.length;
+                    const baseColor = sectionColors[colorIndex];
+                    
+                    const pieceGradient = ctx.createLinearGradient(
+                        startX, currentY, 
+                        startX + width * scale, currentY
+                    );
+                    pieceGradient.addColorStop(0, baseColor);
+                    pieceGradient.addColorStop(0.5, lightenColor(baseColor, 20));
+                    pieceGradient.addColorStop(1, darkenColor(baseColor, 20));
+                    
+                    ctx.fillStyle = pieceGradient;
+                    ctx.strokeStyle = darkenColor(baseColor, 40);
+                    
+                    if (split > 1) {
+                        addToLegend(`Peça ${s+1}`, baseColor);
+                    }
+                    
+                    const ripasPerPiece = Math.ceil(quantity / split);
+                    let subHeight = 0;
+                    
+                    for (let i = 0; i < ripasPerPiece; i++) {
+                        if (s * ripasPerPiece + i < quantity) {
+                            const scaledWidth = width * scale;
+                            const scaledHeight = height * scale;
+                            
+                            // Sombra
+                            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+                            ctx.fillRect(startX + 2, currentY + subHeight + 2, scaledWidth, scaledHeight);
+                            
+                            // Ripa principal
+                            ctx.fillStyle = pieceGradient;
+                            ctx.fillRect(startX, currentY + subHeight, scaledWidth, scaledHeight);
+                            ctx.strokeRect(startX, currentY + subHeight, scaledWidth, scaledHeight);
+                            
+                            // Texto
+                            if (scaledWidth > 40 && scaledHeight > 25) {
+                                ctx.fillStyle = '#ffffff';
+                                ctx.font = 'bold 11px Arial';
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'middle';
+                                ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+                                ctx.lineWidth = 3;
+                                ctx.strokeText(`${width}×${height}`, startX + scaledWidth/2, currentY + subHeight + scaledHeight/2);
+                                ctx.fillText(`${width}×${height}`, startX + scaledWidth/2, currentY + subHeight + scaledHeight/2);
+                            }
+                            
+                            subHeight += (height + cutThickness) * scale;
+                        }
+                    }
+                    
+                    // Linha de corte entre peças
+                    if (s < split - 1) {
+                        ctx.beginPath();
+                        ctx.setLineDash([8, 4]);
+                        ctx.lineWidth = 4;
+                        ctx.strokeStyle = '#f85149';
+                        ctx.moveTo(startX - 25, currentY + pieceHeight);
+                        ctx.lineTo(startX + width * scale + 25, currentY + pieceHeight);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                        
+                        ctx.font = '20px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillStyle = '#f85149';
+                        ctx.fillText('⚡', startX - 35, currentY + pieceHeight + 5);
+                    }
+                    
+                    currentY += pieceHeight;
+                }
+                
+                document.getElementById('dimensionsLabel').innerHTML = 
+                    `📐 <strong>Largura:</strong> ${width}mm | <strong>Altura Total:</strong> ${Math.round(totalLength)}mm | <strong>Por Peça:</strong> ${Math.round(totalLength/split)}mm`;
+            }
+        }
+        
+        function addToLegend(text, color) {
+            const legendDiv = document.getElementById('colorLegend');
+            const legendItem = document.createElement('div');
+            legendItem.className = 'legend-item';
+            
+            const colorBox = document.createElement('div');
+            colorBox.className = 'color-box';
+            colorBox.style.backgroundColor = color;
+            
+            const legendText = document.createElement('span');
+            legendText.textContent = text;
+            
+            legendItem.appendChild(colorBox);
+            legendItem.appendChild(legendText);
+            legendDiv.appendChild(legendItem);
+        }
+
+        // Funções auxiliares para manipular cores
+        function lightenColor(color, percent) {
+            const num = parseInt(color.replace("#",""), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) + amt;
+            const G = (num >> 8 & 0x00FF) + amt;
+            const B = (num & 0x0000FF) + amt;
+            return "#" + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+                (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
+                (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
+        }
+
+        function darkenColor(color, percent) {
+            const num = parseInt(color.replace("#",""), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) - amt;
+            const G = (num >> 8 & 0x00FF) - amt;
+            const B = (num & 0x0000FF) - amt;
+            return "#" + (0x1000000 + (R > 255 ? 255 : R < 0 ? 0 : R) * 0x10000 +
+                (G > 255 ? 255 : G < 0 ? 0 : G) * 0x100 +
+                (B > 255 ? 255 : B < 0 ? 0 : B)).toString(16).slice(1);
+        }
+
+        // Auto-calcular quando os valores mudarem
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', calculate);
+        });
+
+        document.querySelectorAll('input[name="calculationType"]').forEach(radio => {
+            radio.addEventListener('change', calculate);
+        });
+    </script>
+</body>
+</html>
