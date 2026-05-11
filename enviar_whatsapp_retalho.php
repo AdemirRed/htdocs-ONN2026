@@ -13,7 +13,7 @@ $session_id = 'ademir'; // Sessão dedicada para o sistema de retalhos
 // Números de destino disponíveis
 $destinatarios = [
     '1' => ['nome' => 'Ademir', 'numero' => '555197756708'],
-    '2' => ['nome' => 'Pedro', 'numero' => '555193123053']
+    '2' => ['nome' => 'Jairo', 'numero' => '555199249666']
 ];
 
 // Validar requisição

@@ -1091,7 +1091,7 @@ $retalhos = loadRetalhos($directory_retalhos, $materials, $material_code, $filte
                     <label class="form-label" for="destinatario">📱 Enviar para:</label>
                     <select id="destinatario" name="destinatario" class="form-select" required>
                         <option value="1" selected>1️⃣ Ademir</option>
-                        <option value="2">2️⃣ Pedro</option>
+                        <option value="2">2️⃣ Jairo</option>
                     </select>
                 </div>
 
