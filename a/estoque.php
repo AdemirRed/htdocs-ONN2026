@@ -295,6 +295,59 @@ $result = $conn->query($sql);
             font-weight: 700;
         }
 
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+
+        .tab-button {
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 18px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .tab-button.active,
+        .tab-button:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        #mdf-loading,
+        #mdf-error {
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        #mdf-loading {
+            color: #4a9eff;
+            background: rgba(74, 158, 255, 0.1);
+            border-left: 4px solid #4a9eff;
+        }
+
+        #mdf-error {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            border-left: 4px solid #ff6b6b;
+        }
+
         .btn-primary {
             background: var(--primary);
             color: white;
@@ -327,7 +380,7 @@ $result = $conn->query($sql);
 
         .table-responsive {
             overflow-x: auto;
-            background: var(--bg-darker);
+            background: var(--bg-card);
             border-radius: 12px;
             border: 1px solid var(--border);
         }
@@ -336,31 +389,64 @@ $result = $conn->query($sql);
             width: 100%;
             border-collapse: collapse;
             margin-top: 0;
+            background: #0f1117;
         }
 
         th, td {
-            padding: 16px;
+            padding: 14px 16px;
             text-align: left;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid #4a9eff;
         }
 
         th {
-            font-weight: 600;
-            background: var(--bg-input);
-            color: var(--text-primary);
-            border-bottom: 2px solid var(--border);
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            border-bottom: 2px solid #4a9eff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
         }
 
         tbody tr {
-            background: var(--bg-card);
+            background: #1a1d23;
+            transition: all 0.2s ease;
         }
 
         td {
-            color: var(--text-secondary);
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 0.95rem;
         }
 
         tbody tr:hover {
-            background: var(--bg-hover);
+            background: #2a2d33;
+            box-shadow: inset 0 0 8px rgba(74, 158, 255, 0.2);
+        }
+
+        .dataTable tbody tr,
+        .dataTable tbody td {
+            background: #1a1d23 !important;
+            color: #ffffff !important;
+        }
+
+        .dataTable tbody tr:hover {
+            background: #2a2d33 !important;
+        }
+
+        .dataTables_wrapper .dataTables_scrollHeadInner,
+        .dataTables_wrapper .dataTables_scrollHeadInner table {
+            background: transparent !important;
+        }
+
+        thead {
+            background: #0f1117 !important;
+        }
+
+        thead th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: #ffffff !important;
+            border-bottom: 2px solid #4a9eff !important;
         }
 
         .actions {
@@ -443,6 +529,85 @@ $result = $conn->query($sql);
         .modal-body {
             padding: 28px;
             background: var(--bg-darker);
+        }
+
+        .modal-subtitle {
+            color: #a5b4fc;
+            font-size: 0.95rem;
+            padding: 0 28px 18px;
+            text-align: left;
+        }
+
+        .section-box {
+            background: #23262d;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 18px;
+        }
+
+        .section-title {
+            color: #9ecbff;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: 0.02em;
+        }
+
+        .field-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .field-block {
+            min-width: 220px;
+            flex: 1;
+        }
+
+        .field-label {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .field-value {
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .radio-inline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: #10131a;
+            border-radius: 12px;
+            padding: 10px 14px;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .radio-inline input {
+            margin: 0;
+            transform: scale(1.1);
+        }
+
+        .radio-inline:hover {
+            border-color: #4a9eff;
+            background: rgba(74, 158, 255, 0.08);
         }
 
         .modal-footer {
@@ -535,43 +700,57 @@ $result = $conn->query($sql);
 
         .dataTables_wrapper .dataTables_filter input {
             padding: 10px 16px;
-            border: 2px solid var(--border);
+            border: 2px solid #4a9eff;
             border-radius: 8px;
             margin-left: 8px;
-            background: var(--bg-input);
-            color: var(--text-primary);
+            background: #2d3139;
+            color: #ffffff;
+            font-weight: 600;
         }
 
         .dataTables_wrapper .dataTables_length select {
             padding: 8px 12px;
-            border: 2px solid var(--border);
+            border: 2px solid #4a9eff;
             border-radius: 8px;
-            background: var(--bg-input);
-            color: var(--text-primary);
+            background: #2d3139;
+            color: #ffffff;
+            font-weight: 600;
         }
 
         .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 8px 14px;
             margin-left: 4px;
             border-radius: 8px;
-            background: var(--bg-input);
-            color: var(--text-primary) !important;
-            border: 1px solid var(--border);
+            background: #2d3139;
+            color: #ffffff !important;
+            border: 1px solid #4a9eff;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: #4a9eff !important;
+            color: #000000 !important;
+            border-color: #4a9eff;
         }
 
         .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-            background: var(--primary) !important;
-            color: white !important;
-            border: none;
+            background: #4a9eff !important;
+            color: #000000 !important;
+            border: 1px solid #4a9eff;
+            font-weight: 700;
         }
 
         .dataTables_wrapper .dataTables_info {
-            color: var(--text-secondary);
+            color: #ffffff;
+            font-weight: 600;
         }
 
         .dataTables_wrapper .dataTables_length,
         .dataTables_wrapper .dataTables_filter {
-            color: var(--text-primary);
+            color: #ffffff;
+            font-weight: 700;
         }
 
         /* Scrollbar */
@@ -676,8 +855,14 @@ $result = $conn->query($sql);
                 </button>
             </div>
             
-            <div class="table-responsive">
-                <table id="itemsTable" class="display">
+            <div class="tab-buttons">
+                <button type="button" class="tab-button active" data-tab="estoque">Estoque</button>
+                <button type="button" class="tab-button" data-tab="mdf">MDF</button>
+            </div>
+            <div class="tab-content">
+                <div id="tab-estoque" class="tab-pane active">
+                    <div class="table-responsive">
+                        <table id="itemsTable" class="display">
                     <thead>
                         <tr>
                             <th>Código</th>
@@ -741,6 +926,26 @@ $result = $conn->query($sql);
                 </table>
             </div>
         </div>
+        <div id="tab-mdf" class="tab-pane">
+            <div id="mdf-loading">Carregando MDF...</div>
+            <div id="mdf-error" style="display:none;"></div>
+            <div class="table-responsive">
+                <table id="mdfTable" class="display">
+                    <thead>
+                        <tr>
+                            <th style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff;">Código</th>
+                            <th style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff;">Nome</th>
+                            <th style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff;">Espessura</th>
+                            <th style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff;">Preço Chapa</th>
+                            <th style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff;">Quantidade</th>
+                            <th style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     </div>
 
     <div id="editModal" class="modal">
@@ -867,6 +1072,69 @@ $result = $conn->query($sql);
         </div>
     </div>
 
+    <div id="editarQtdModal" class="modal">
+        <div class="modal-content modal-material-edit">
+            <div class="modal-header">
+                <h2>Edição do Material <span id="edit_qtd_codigo_display"></span></h2>
+                <span class="close" onclick="fecharEditarQtdModal()">&times;</span>
+            </div>
+            <div class="modal-subtitle">Material com tamanhos diferentes - edição aplicará a todos</div>
+            <div class="modal-body">
+                <form id="editarQtdForm">
+                    <input type="hidden" id="edit_qtd_codigo" name="codigo">
+                    <input type="hidden" id="edit_qtd_current" value="0">
+
+                    <div class="section-box">
+                        <div class="section-title">Nome do Material</div>
+                        <input type="text" class="form-control" id="edit_qtd_nome" readonly>
+                    </div>
+
+                    <div class="section-box">
+                        <div class="section-title">Controle de Estoque</div>
+                        <div class="field-row">
+                            <div class="field-block">
+                                <div class="field-label">Quantidade Atual</div>
+                                <div class="field-value" id="edit_qtd_atual_display">-</div>
+                            </div>
+                        </div>
+                        <div class="radio-group">
+                            <label class="radio-inline"><input type="radio" name="edit_qtd_operacao" value="entrada"> Entrada</label>
+                            <label class="radio-inline"><input type="radio" name="edit_qtd_operacao" value="saida"> Saída</label>
+                            <label class="radio-inline"><input type="radio" name="edit_qtd_operacao" value="definir" checked> Definir Total</label>
+                        </div>
+                        <div class="form-group" style="margin-top: 14px;">
+                            <label for="edit_qtd_operacao_valor">Quantidade</label>
+                            <input type="number" min="0" class="form-control" id="edit_qtd_operacao_valor" placeholder="0">
+                        </div>
+                    </div>
+
+                    <div class="section-box">
+                        <div class="section-title">Estoque Mínimo</div>
+                        <div class="field-row">
+                            <div class="field-block">
+                                <div class="field-label">Quantidade Mínima Atual</div>
+                                <div class="field-value" id="edit_qtd_min_atual_display">-</div>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-top: 14px;">
+                            <label for="edit_qtd_valor">Nova Quantidade Mínima</label>
+                            <input type="number" min="0" class="form-control" id="edit_qtd_valor" name="quantidade" required>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" onclick="fecharEditarQtdModal()">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Salvar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
     <script>
@@ -890,6 +1158,21 @@ setInterval(atualizarNotificacoes, 10000); // Atualiza a cada 10 segundos
 atualizarNotificacoes(); // Executa na primeira carga
 
         $(document).ready(function() {
+    var mdfTable = $('#mdfTable').DataTable({
+        language: {
+            url: 'Portuguese-Brasil.json'
+        },
+        responsive: true,
+        paging: true,
+        searching: true,
+        info: true,
+        lengthChange: true,
+        order: [[0, 'asc']],
+        columnDefs: [
+            { targets: 5, orderable: false, searchable: false }
+        ]
+    });
+
     $('#itemsTable').DataTable({
         language: {
             url: 'Portuguese-Brasil.json'
@@ -900,6 +1183,182 @@ atualizarNotificacoes(); // Executa na primeira carga
             setTimeout(function() {
                 $('.alert').fadeOut('slow');
             }, 5000);
+
+            function switchTab(tabName) {
+                $('.tab-button').removeClass('active');
+                $('.tab-button[data-tab="' + tabName + '"]').addClass('active');
+                $('.tab-pane').removeClass('active');
+                $('#tab-' + tabName).addClass('active');
+                if (tabName === 'mdf' && typeof mdfTable !== 'undefined' && mdfTable) {
+                    mdfTable.columns.adjust();
+                    if (mdfTable.responsive && typeof mdfTable.responsive.recalc === 'function') {
+                        mdfTable.responsive.recalc();
+                    }
+                }
+            }
+
+            $('.tab-button').on('click', function() {
+                var tab = $(this).data('tab');
+                switchTab(tab);
+            });
+
+            function carregarMdf() {
+                var $loading = $('#mdf-loading');
+                var $error = $('#mdf-error');
+                var $tbody = $('#mdfTable tbody');
+                $loading.text('Carregando MDF...').show();
+                $error.hide();
+                $tbody.html('');
+
+                fetch('mdf_stock.php')
+                    .then(function(response) {
+                        if (!response.ok) {
+                            throw new Error('Resposta HTTP ' + response.status);
+                        }
+                        return response.json();
+                    })
+                    .then(function(data) {
+                        if (!Array.isArray(data)) {
+                            throw new Error('JSON inválido');
+                        }
+
+                        if (data.length === 0) {
+                            mdfTable.clear().draw();
+                        } else {
+                            var rows = [];
+                            data.forEach(function(item) {
+                                var espessura = item.espessura ? item.espessura + ' mm' : '-';
+                                var precoChapa = item.preco_chapa !== null && item.preco_chapa !== undefined ? 'R$ ' + Number(item.preco_chapa).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '-';
+                                var quantidade = item.quantidade !== null ? item.quantidade : '-';
+                                var qtdMin = item.qtd_min_chp !== null && item.qtd_min_chp !== undefined ? item.qtd_min_chp : '-';
+                                var codigoEscapado = htmlspecialchars(item.codigo);
+                                var nomeEscapado = htmlspecialchars(item.nome);
+                                var precoEscapado = htmlspecialchars(precoChapa);
+                                var quantidadeEscapado = htmlspecialchars(quantidade);
+                                var qtdMinEscapado = htmlspecialchars(qtdMin);
+                                var acoes = '<button class="btn btn-warning btn-sm"'
+                                    + ' data-codigo="' + codigoEscapado + '"'
+                                    + ' data-nome="' + nomeEscapado + '"'
+                                    + ' data-preco="' + precoEscapado + '"'
+                                    + ' data-quantidade="' + quantidadeEscapado + '"'
+                                    + ' data-qtdmin="' + qtdMinEscapado + '"'
+                                    + ' onclick="abrirEditarQtdModal(this)">' 
+                                    + '<i class="fas fa-edit"></i> Editar'
+                                    + '</button>';
+                                rows.push([
+                                    codigoEscapado,
+                                    nomeEscapado,
+                                    htmlspecialchars(espessura),
+                                    precoEscapado,
+                                    quantidadeEscapado,
+                                    acoes
+                                ]);
+                            });
+                            mdfTable.clear().rows.add(rows).draw();
+                        }
+                    })
+                    .catch(function(err) {
+                        console.error('Erro MDF', err);
+                        $error.text('Erro ao carregar MDF: ' + err.message).show();
+                        $tbody.html('<tr><td colspan="4" style="text-align:center;">Falha ao carregar dados MDF.</td></tr>');
+                    })
+                    .finally(function() {
+                        $loading.hide();
+                    });
+            }
+
+            function htmlspecialchars(text) {
+                if (text === null || text === undefined) {
+                    return '';
+                }
+                text = String(text);
+                return text
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+
+            var editarQtdModal = document.getElementById("editarQtdModal");
+
+            window.abrirEditarQtdModal = function(button) {
+                var codigo = button.getAttribute('data-codigo') || '';
+                var nome = button.getAttribute('data-nome') || '';
+                var preco = button.getAttribute('data-preco') || '';
+                var quantidade = button.getAttribute('data-quantidade') || '0';
+                var qtdMin = button.getAttribute('data-qtdmin') || '0';
+
+                document.getElementById("edit_qtd_codigo").value = codigo;
+                document.getElementById("edit_qtd_codigo_display").textContent = codigo;
+                document.getElementById("edit_qtd_nome").value = nome;
+                document.getElementById("edit_qtd_preco").value = preco;
+                document.getElementById("edit_qtd_atual_display").textContent = quantidade !== '-' ? quantidade + ' chapas' : '-';
+                document.getElementById("edit_qtd_min_atual_display").textContent = qtdMin !== '-' && qtdMin !== '' ? qtdMin + ' chapas' : '-';
+                document.getElementById("edit_qtd_current").value = quantidade !== '-' ? quantidade : '0';
+                document.getElementById("edit_qtd_operacao_valor").value = '';
+                document.getElementById("edit_qtd_valor").value = '';
+                document.querySelector('input[name="edit_qtd_operacao"][value="definir"]').checked = true;
+                document.getElementById("edit_qtd_operacao_valor").focus();
+                editarQtdModal.style.display = "block";
+            }
+
+            window.fecharEditarQtdModal = function() {
+                editarQtdModal.style.display = "none";
+            }
+
+            window.onclick = function(event) {
+                if (event.target == editarQtdModal) {
+                    window.fecharEditarQtdModal();
+                }
+            }
+
+            $('#editarQtdForm').on('submit', function(e) {
+                e.preventDefault();
+                var codigo = document.getElementById("edit_qtd_codigo").value;
+                var operacao = document.querySelector('input[name="edit_qtd_operacao"]:checked').value;
+                var atual = parseInt(document.getElementById("edit_qtd_current").value, 10) || 0;
+                var valorDigitado = parseInt(document.getElementById("edit_qtd_valor").value, 10);
+                if (isNaN(valorDigitado)) {
+                    alert('Informe uma quantidade válida.');
+                    return;
+                }
+
+                var quantidadeFinal = valorDigitado;
+                if (operacao === 'entrada') {
+                    quantidadeFinal = atual + valorDigitado;
+                } else if (operacao === 'saida') {
+                    quantidadeFinal = Math.max(atual - valorDigitado, 0);
+                }
+
+                $.ajax({
+                    url: 'mdf_update_quantity.php',
+                    type: 'POST',
+                    data: {
+                        codigo: codigo,
+                        quantidade: quantidadeFinal
+                    },
+                    success: function(response) {
+                        fecharEditarQtdModal();
+                        alert('Quantidade atualizada com sucesso!');
+                        carregarMdf();
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Erro ao atualizar quantidade: ' + (xhr.responseText || error));
+                    }
+                });
+            });
+
+            document.getElementById("edit_qtd_operacao_valor").addEventListener('input', function() {
+                document.getElementById("edit_qtd_valor").value = this.value;
+            });
+
+            document.getElementById("edit_qtd_valor").addEventListener('input', function() {
+                document.getElementById("edit_qtd_operacao_valor").value = this.value;
+            });
+
+            carregarMdf();
+            setInterval(carregarMdf, 60000);
         });
         
         var editModal = document.getElementById("editModal");
