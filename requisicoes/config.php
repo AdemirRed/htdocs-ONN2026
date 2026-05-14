@@ -7,7 +7,19 @@ define('DB_NAME', 'onnmoveis');
 
 // Conexão com o banco de dados
 function getConnection() {
-    $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    $dbHost = DB_HOST;
+    
+    // Se o servidor for a própria máquina, use localhost para evitar erro de permissão
+    if (!empty($_SERVER['SERVER_ADDR']) && $_SERVER['SERVER_ADDR'] === $dbHost) {
+        $dbHost = "127.0.0.1";
+    }
+    
+    try {
+        $conn = new mysqli($dbHost, DB_USER, DB_PASS, DB_NAME);
+    } catch (mysqli_sql_exception $e) {
+        // Fallback: tentar localhost se o IP da rede for bloqueado
+        $conn = new mysqli("127.0.0.1", DB_USER, DB_PASS, DB_NAME);
+    }
     
     if ($conn->connect_error) {
         die("Erro na conexão: " . $conn->connect_error);

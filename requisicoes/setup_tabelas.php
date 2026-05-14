@@ -3,13 +3,8 @@
  * Script para criar tabelas de requisições
  */
 
-$conn = new mysqli('192.168.0.201', 'root', '', 'onnmoveis');
-
-if ($conn->connect_error) {
-    die("Erro na conexão: " . $conn->connect_error);
-}
-
-$conn->set_charset("utf8mb4");
+require_once 'config.php';
+$conn = getConnection();
 
 echo "<h2>Criando tabelas de requisições...</h2>";
 

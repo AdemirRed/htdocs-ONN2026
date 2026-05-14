@@ -1170,8 +1170,22 @@ $statusParaClasse = $pedidosManager->getStatusParaClasse();
                 <input type="hidden" name="adicionar_pedido" value="1">
                 <div class="form-row">
                     <div class="form-group">
+                        <label><i class="fas fa-search"></i> Buscar Material</label>
+                        <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+                            <div style="flex: 0 0 100px;">
+                                <input type="text" id="codigoMaterial" class="form-control form-control-sm" 
+                                       placeholder="Código" maxlength="20" autocomplete="off"
+                                       title="Digite o código e saia do campo para preencher automático">
+                            </div>
+                            <div class="product-search-wrapper" style="flex: 1;">
+                                <input type="text" id="buscaMaterial" class="form-control form-control-sm" 
+                                       placeholder="Pesquisar por nome..." maxlength="100"
+                                       autocomplete="off">
+                                <div class="product-search-results" id="searchResults"></div>
+                            </div>
+                        </div>
                         <label><i class="fas fa-box"></i> Produto *</label>
-                        <input type="text" name="NomeProduto" required class="form-control" 
+                        <input type="text" name="NomeProduto" id="nomeProduto" required class="form-control" 
                                placeholder="Nome do produto" maxlength="255">
                     </div>
                     <div class="form-group">

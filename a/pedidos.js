@@ -613,3 +613,193 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// =============================================
+// Product Search Autocomplete
+// =============================================
+(function() {
+    let searchTimeout = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const codigoInput = document.getElementById('codigoMaterial');
+        const buscaInput = document.getElementById('buscaMaterial');
+        const searchResults = document.getElementById('searchResults');
+        const nomeProdutoInput = document.getElementById('nomeProduto');
+
+        if (!codigoInput || !buscaInput || !searchResults || !nomeProdutoInput) return;
+
+        // ==============================
+        // Busca direta pelo Código
+        // ==============================
+        codigoInput.addEventListener('blur', function() {
+            const code = this.value.trim();
+            if (code.length === 0) return;
+
+            nomeProdutoInput.placeholder = "Buscando...";
+            
+            fetch('buscar_itens.php?q=' + encodeURIComponent(code) + '&tipo=todos')
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    nomeProdutoInput.placeholder = "Nome do produto";
+                    if (data && data.length > 0) {
+                        // Procura match exato
+                        const exato = data.find(function(item) { 
+                            return item.codigo.toUpperCase() === code.toUpperCase(); 
+                        });
+                        
+                        if (exato) {
+                            nomeProdutoInput.value = exato.nome;
+                            codigoInput.value = exato.codigo;
+                        } else {
+                            // Se não achar exato, usa o primeiro que começar com o que foi digitado
+                            if (data[0].codigo.toUpperCase().startsWith(code.toUpperCase())) {
+                                nomeProdutoInput.value = data[0].nome;
+                                codigoInput.value = data[0].codigo;
+                            }
+                        }
+                    }
+                })
+                .catch(function(err) {
+                    console.error('Erro ao buscar código:', err);
+                    nomeProdutoInput.placeholder = "Nome do produto";
+                });
+        });
+
+        codigoInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.blur(); // Dispara o blur que faz a busca
+            }
+        });
+
+        // ==============================
+        // Busca por Nome (Autocomplete)
+        // ==============================
+
+        // Buscar ao digitar (com debounce)
+        buscaInput.addEventListener('input', function() {
+            const termo = this.value.trim();
+            
+            if (searchTimeout) clearTimeout(searchTimeout);
+
+            if (termo.length < 1) {
+                searchResults.classList.remove('active');
+                searchResults.innerHTML = '';
+                return;
+            }
+
+            searchTimeout = setTimeout(function() {
+                buscarMateriais(termo, buscaInput, searchResults, nomeProdutoInput);
+            }, 300);
+        });
+
+        // Fechar ao clicar fora
+        document.addEventListener('click', function(e) {
+            if (!buscaInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.classList.remove('active');
+            }
+        });
+
+        // Reabrir ao focar no campo se tiver conteúdo
+        buscaInput.addEventListener('focus', function() {
+            if (searchResults.children.length > 0 && this.value.trim().length >= 1) {
+                searchResults.classList.add('active');
+            }
+        });
+
+        // Navegação por teclado
+        buscaInput.addEventListener('keydown', function(e) {
+            if (!searchResults.classList.contains('active')) return;
+            
+            const items = searchResults.querySelectorAll('.product-search-item');
+            let activeIndex = -1;
+            items.forEach(function(item, i) {
+                if (item.classList.contains('keyboard-active')) activeIndex = i;
+            });
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (activeIndex < items.length - 1) {
+                    items.forEach(function(item) { item.classList.remove('keyboard-active'); });
+                    items[activeIndex + 1].classList.add('keyboard-active');
+                    items[activeIndex + 1].scrollIntoView({ block: 'nearest' });
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (activeIndex > 0) {
+                    items.forEach(function(item) { item.classList.remove('keyboard-active'); });
+                    items[activeIndex - 1].classList.add('keyboard-active');
+                    items[activeIndex - 1].scrollIntoView({ block: 'nearest' });
+                }
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (activeIndex >= 0) {
+                    items[activeIndex].click();
+                }
+            } else if (e.key === 'Escape') {
+                searchResults.classList.remove('active');
+            }
+        });
+    });
+
+    function buscarMateriais(termo, buscaInput, searchResults, nomeProdutoInput) {
+        fetch('buscar_itens.php?q=' + encodeURIComponent(termo) + '&tipo=todos')
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                searchResults.innerHTML = '';
+
+                if (!Array.isArray(data) || data.length === 0) {
+                    searchResults.innerHTML = '<div class="product-search-empty">Nenhum material encontrado</div>';
+                    searchResults.classList.add('active');
+                    return;
+                }
+
+                data.forEach(function(item) {
+                    var div = document.createElement('div');
+                    div.className = 'product-search-item';
+
+                    // Highlight do termo no nome
+                    var nomeHtml = highlightText(item.nome, termo);
+
+                    div.innerHTML = '<span class="item-codigo">' + escapeHtml(item.codigo) + '</span>'
+                                  + '<span class="item-nome">' + nomeHtml + '</span>';
+
+                    div.addEventListener('click', function() {
+                        nomeProdutoInput.value = item.nome;
+                        buscaInput.value = item.nome; // Apenas o nome na pesquisa
+                        const codInput = document.getElementById('codigoMaterial');
+                        if (codInput) codInput.value = item.codigo;
+                        
+                        searchResults.classList.remove('active');
+                        nomeProdutoInput.focus();
+                    });
+
+                    searchResults.appendChild(div);
+                });
+
+                searchResults.classList.add('active');
+            })
+            .catch(function(err) {
+                console.error('Erro na busca:', err);
+                searchResults.innerHTML = '<div class="product-search-empty">Erro ao buscar materiais</div>';
+                searchResults.classList.add('active');
+            });
+    }
+
+    function highlightText(text, term) {
+        if (!term) return escapeHtml(text);
+        var escaped = escapeHtml(text);
+        var regex = new RegExp('(' + term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+        return escaped.replace(regex, '<mark>$1</mark>');
+    }
+
+    function escapeHtml(text) {
+        if (text === null || text === undefined) return '';
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+})();

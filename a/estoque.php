@@ -776,22 +776,46 @@ $result = $conn->query($sql);
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
-                gap: 16px;
+                gap: 12px;
                 text-align: center;
+                padding: 15px 10px;
+            }
+
+            .user-info {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+            }
+            
+            .user-info .btn, .logout-btn {
+                margin: 4px !important;
+                font-size: 0.85rem;
+                padding: 8px 12px;
+                flex: 1 1 auto;
+                justify-content: center;
+            }
+
+            .user-info span {
+                width: 100%;
+                margin: 4px 0;
             }
 
             .container {
-                padding: 20px 12px;
+                padding: 15px 10px;
             }
 
             .card {
-                padding: 20px;
+                padding: 15px;
             }
 
             .card-header {
                 flex-direction: column;
-                gap: 16px;
+                gap: 12px;
                 align-items: stretch;
+            }
+            
+            .card-header h2 {
+                text-align: center;
             }
 
             .form-row {
@@ -800,14 +824,39 @@ $result = $conn->query($sql);
 
             .actions {
                 flex-direction: column;
+                gap: 5px;
             }
 
             table {
-                font-size: 0.875rem;
+                font-size: 0.8rem;
             }
 
             th, td {
-                padding: 12px 8px;
+                padding: 8px 5px;
+            }
+            
+            .tab-buttons {
+                justify-content: center;
+            }
+            
+            .tab-button {
+                flex: 1 1 40%;
+                text-align: center;
+                padding: 8px 10px;
+                font-size: 0.85rem;
+            }
+            
+            .dataTables_wrapper .dataTables_filter input {
+                width: 100%;
+                margin-top: 8px;
+                margin-left: 0;
+            }
+            
+            .dataTables_wrapper .dataTables_length,
+            .dataTables_wrapper .dataTables_filter {
+                text-align: left;
+                float: none;
+                margin-bottom: 10px;
             }
         }
     </style>
@@ -1083,6 +1132,7 @@ $result = $conn->query($sql);
                 <form id="editarQtdForm">
                     <input type="hidden" id="edit_qtd_codigo" name="codigo">
                     <input type="hidden" id="edit_qtd_current" value="0">
+                    <input type="hidden" id="edit_qtd_preco" name="preco">
 
                     <div class="section-box">
                         <div class="section-title">Nome do Material</div>
@@ -1098,9 +1148,9 @@ $result = $conn->query($sql);
                             </div>
                         </div>
                         <div class="radio-group">
-                            <label class="radio-inline"><input type="radio" name="edit_qtd_operacao" value="entrada"> Entrada</label>
+                            <label class="radio-inline"><input type="radio" name="edit_qtd_operacao" value="entrada" checked> Entrada</label>
                             <label class="radio-inline"><input type="radio" name="edit_qtd_operacao" value="saida"> Saída</label>
-                            <label class="radio-inline"><input type="radio" name="edit_qtd_operacao" value="definir" checked> Definir Total</label>
+                            <label class="radio-inline"><input type="radio" name="edit_qtd_operacao" value="definir" > Definir Total</label>
                         </div>
                         <div class="form-group" style="margin-top: 14px;">
                             <label for="edit_qtd_operacao_valor">Quantidade</label>
@@ -1117,8 +1167,8 @@ $result = $conn->query($sql);
                             </div>
                         </div>
                         <div class="form-group" style="margin-top: 14px;">
-                            <label for="edit_qtd_valor">Nova Quantidade Mínima</label>
-                            <input type="number" min="0" class="form-control" id="edit_qtd_valor" name="quantidade" required>
+                            <label for="edit_qtd_minimo">Nova Quantidade Mínima</label>
+                            <input type="number" min="0" class="form-control" id="edit_qtd_minimo" name="estoque_minimo" required>
                         </div>
                     </div>
 
@@ -1296,9 +1346,9 @@ atualizarNotificacoes(); // Executa na primeira carga
                 document.getElementById("edit_qtd_atual_display").textContent = quantidade !== '-' ? quantidade + ' chapas' : '-';
                 document.getElementById("edit_qtd_min_atual_display").textContent = qtdMin !== '-' && qtdMin !== '' ? qtdMin + ' chapas' : '-';
                 document.getElementById("edit_qtd_current").value = quantidade !== '-' ? quantidade : '0';
-                document.getElementById("edit_qtd_operacao_valor").value = '';
-                document.getElementById("edit_qtd_valor").value = '';
-                document.querySelector('input[name="edit_qtd_operacao"][value="definir"]').checked = true;
+                document.getElementById("edit_qtd_operacao_valor").value = '0';
+                document.getElementById("edit_qtd_minimo").value = (qtdMin !== '-' && qtdMin !== '') ? qtdMin : '0';
+                document.querySelector('input[name="edit_qtd_operacao"][value="entrada"]').checked = true;
                 document.getElementById("edit_qtd_operacao_valor").focus();
                 editarQtdModal.style.display = "block";
             }
@@ -1318,10 +1368,14 @@ atualizarNotificacoes(); // Executa na primeira carga
                 var codigo = document.getElementById("edit_qtd_codigo").value;
                 var operacao = document.querySelector('input[name="edit_qtd_operacao"]:checked').value;
                 var atual = parseInt(document.getElementById("edit_qtd_current").value, 10) || 0;
-                var valorDigitado = parseInt(document.getElementById("edit_qtd_valor").value, 10);
+                var valorDigitado = parseInt(document.getElementById("edit_qtd_operacao_valor").value, 10);
+                var qtdMinimo = parseInt(document.getElementById("edit_qtd_minimo").value, 10);
                 if (isNaN(valorDigitado)) {
                     alert('Informe uma quantidade válida.');
                     return;
+                }
+                if (isNaN(qtdMinimo) || qtdMinimo < 0) {
+                    qtdMinimo = 0;
                 }
 
                 var quantidadeFinal = valorDigitado;
@@ -1331,30 +1385,32 @@ atualizarNotificacoes(); // Executa na primeira carga
                     quantidadeFinal = Math.max(atual - valorDigitado, 0);
                 }
 
-                $.ajax({
+                // Enviar quantidade e estoque mínimo em paralelo
+                var reqQtd = $.ajax({
                     url: 'mdf_update_quantity.php',
                     type: 'POST',
                     data: {
                         codigo: codigo,
                         quantidade: quantidadeFinal
-                    },
-                    success: function(response) {
-                        fecharEditarQtdModal();
-                        alert('Quantidade atualizada com sucesso!');
-                        carregarMdf();
-                    },
-                    error: function(xhr, status, error) {
-                        alert('Erro ao atualizar quantidade: ' + (xhr.responseText || error));
                     }
                 });
-            });
 
-            document.getElementById("edit_qtd_operacao_valor").addEventListener('input', function() {
-                document.getElementById("edit_qtd_valor").value = this.value;
-            });
+                var reqMin = $.ajax({
+                    url: 'mdf_update_min_quantity.php',
+                    type: 'POST',
+                    data: {
+                        codigo: codigo,
+                        qtd_minimo: qtdMinimo
+                    }
+                });
 
-            document.getElementById("edit_qtd_valor").addEventListener('input', function() {
-                document.getElementById("edit_qtd_operacao_valor").value = this.value;
+                $.when(reqQtd, reqMin).done(function() {
+                    fecharEditarQtdModal();
+                    alert('Quantidade e estoque mínimo atualizados com sucesso!');
+                    carregarMdf();
+                }).fail(function(xhr) {
+                    alert('Erro ao atualizar: ' + (xhr.responseText || 'Erro desconhecido'));
+                });
             });
 
             carregarMdf();

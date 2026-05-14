@@ -84,12 +84,13 @@ function updateChpQuantities(string $filePath, int $novaQtd): bool
     $updated = false;
 
     foreach ($lines as $key => $line) {
-        $line = trim($line);
-        if ($line === '' || $line[0] === ';' || $line[0] === '#') {
+        $trimmed = trim($line);
+        if ($trimmed === '' || $trimmed[0] === ';' || $trimmed[0] === '#') {
             continue;
         }
 
-        $parts = preg_split('/[\s;|]+/', $line);
+        // Parse para validação usando qualquer whitespace
+        $parts = preg_split('/[\s;|]+/', $trimmed);
         if (count($parts) < 5) {
             continue;
         }
@@ -102,14 +103,38 @@ function updateChpQuantities(string $filePath, int $novaQtd): bool
         }
 
         if (isBaseSheetDimension($width, $height)) {
+            // Atualizar quantidade mantendo o formato correto com espaços fixos
+            // Formato: col1(8 espaços)col2(6 espaços)col3(6 espaços)col4(1 espaço)col5(1 espaço)resto
             $parts[2] = (string)$novaQtd;
-            $lines[$key] = implode("\t", $parts);
+            
+            // Reconstruir a linha com espaçamento fixo correto
+            // Campo 1: valor + espaços para completar 8 posições
+            // Campo 2: valor + espaços para completar 6 posições
+            // Campo 3: valor + espaços para completar 6 posições
+            // Campo 4: valor + 1 espaço
+            // Campo 5: valor + 1 espaço
+            // Resto: demais campos separados por 1 espaço
+            $rebuilt = str_pad($parts[0], 8, ' ', STR_PAD_RIGHT);
+            $rebuilt .= str_pad($parts[1], 7, ' ', STR_PAD_RIGHT);
+            $rebuilt .= $parts[2] . ' ';
+            $rebuilt .= $parts[3] . ' ';
+            $rebuilt .= $parts[4] . ' ';
+            
+            // Adicionar campos restantes (6 em diante)
+            for ($i = 5; $i < count($parts); $i++) {
+                $rebuilt .= $parts[$i];
+                if ($i < count($parts) - 1) {
+                    $rebuilt .= ' ';
+                }
+            }
+            
+            $lines[$key] = $rebuilt;
             $updated = true;
         }
     }
 
     if ($updated) {
-        $content = implode("\n", $lines) . "\n";
+        $content = implode("\r\n", $lines) . "\r\n";
         if (@file_put_contents($filePath, $content) !== false) {
             return true;
         }
